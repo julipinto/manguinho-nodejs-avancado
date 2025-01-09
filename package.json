@@ -11,9 +11,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^22.10.5",
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "module-alias": "^2.2.3",
     "rimraf": "^5.0.10"
   }
 }
