@@ -35,13 +35,13 @@ describe("FacebookAuthentication", () => {
     expect(facebookApi.loadUser).toHaveBeenCalledTimes(1);
   });
 
-  it("should return AuthenticationError when userAccountRepo return undefined", async () => {
+  it("should return AuthenticationError when loadFacebookUserApi return undefined", async () => {
     facebookApi.loadUser.mockResolvedValueOnce(undefined);
     const authResult = await sut.perform({ token });
     expect(authResult).toEqual(new AuthenticationError());
   });
 
-  it("should call userAccountRepo when userAccountRepo returns data", async () => {
+  it("should call loadUserAccountRepo when loadFacebookUserApi returns data", async () => {
     await sut.perform({ token });
     expect(userAccountRepo.load).toHaveBeenCalledWith({
       email: "any_fb_email",
@@ -49,7 +49,7 @@ describe("FacebookAuthentication", () => {
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1);
   });
 
-  it("should call userAccountRepo when userAccountRepo returns undefined", async () => {
+  it("should call createUserAccountRepo when loadFacebookUserApi returns undefined", async () => {
     userAccountRepo.load.mockResolvedValueOnce(undefined);
     await sut.perform({ token });
 
