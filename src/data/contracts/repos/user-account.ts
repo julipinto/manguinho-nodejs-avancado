@@ -17,28 +17,16 @@ export namespace LoadUSerAccountRepository {
       };
 }
 
-export interface CreateUserAccountByFacebookRepository {
-  createFromFacebook: (
-    params: CreateUserAccountByFacebookRepository.Params
+export interface SaveUserAccountByFacebookRepository {
+  saveWithFacebook: (
+    params: SaveUserAccountByFacebookRepository.Params
   ) => Promise<void>;
 }
 
-export namespace CreateUserAccountByFacebookRepository {
+export namespace SaveUserAccountByFacebookRepository {
   export type Params = {
+    id?: string;
     email: string;
-    name: string;
-    facebookId: string;
-  };
-}
-export interface UpdateUserAccountByFacebookRepository {
-  updateWithFacebook: (
-    params: UpdateUserAccountByFacebookRepository.Params
-  ) => Promise<void>;
-}
-
-export namespace UpdateUserAccountByFacebookRepository {
-  export type Params = {
-    id: string;
     name: string;
     facebookId: string;
   };
