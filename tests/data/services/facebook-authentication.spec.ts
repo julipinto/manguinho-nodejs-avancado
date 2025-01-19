@@ -13,15 +13,19 @@ import { mocked } from "jest-mock";
 
 jest.mock("@/domain/models/facebook-account");
 
+// ARRANGE AT ASSERT
+
 describe("FacebookAuthentication", () => {
   let facebookApi: MockProxy<LoadFacebookUserApi>;
   let crypto: MockProxy<TokenGenerator>;
   let userAccountRepo: MockProxy<LoadUSerAccountRepository> &
     MockProxy<SaveUserAccountByFacebookRepository>;
   let sut: FacebookAuthenticationService;
-  const token = "any_token";
+  let token: string;
 
-  beforeEach(() => {
+  beforeAll(() => {
+    token = "any_token";
+
     facebookApi = mock();
     facebookApi.loadUser.mockResolvedValue({
       name: "any_fb_name",
@@ -37,7 +41,9 @@ describe("FacebookAuthentication", () => {
 
     crypto = mock();
     crypto.generateToken.mockResolvedValue("any_generated_token");
+  });
 
+  beforeEach(() => {
     sut = new FacebookAuthenticationService(
       facebookApi,
       userAccountRepo,
@@ -47,6 +53,7 @@ describe("FacebookAuthentication", () => {
 
   it("should call LoadFacebookUserApi with correct params", async () => {
     await sut.perform({ token });
+
     expect(facebookApi.loadUser).toHaveBeenCalledWith({
       token: "any_token",
     });
