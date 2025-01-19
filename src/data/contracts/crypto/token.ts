@@ -3,7 +3,11 @@ export namespace TokenGenerator {
     key: string;
     expirationInMs: number;
   };
+
+  export type Result = string;
 }
 export interface TokenGenerator {
-  generateToken: (params: TokenGenerator.Params) => Promise<void>;
+  generateToken: (
+    params: TokenGenerator.Params
+  ) => Promise<TokenGenerator.Result>;
 }
