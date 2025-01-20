@@ -1,6 +1,5 @@
 import { LoadFacebookUserApi } from "@/data/contracts/apis";
 import { mock, MockProxy } from "jest-mock-extended";
-import { before } from "node:test";
 
 class FacebookApi {
   private readonly baseUrl = "https://graph.facebook.com";
