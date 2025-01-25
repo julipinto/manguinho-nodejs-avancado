@@ -1,7 +1,7 @@
 import { TokenGenerator } from "@/data/contracts/crypto"
 import { sign } from "jsonwebtoken"
 
-export class JsonTokenGenerator {
+export class JsonTokenGenerator implements TokenGenerator {
   constructor(private readonly secret: string) {}
 
   async generateToken(params: TokenGenerator.Params): Promise<TokenGenerator.Result> {
