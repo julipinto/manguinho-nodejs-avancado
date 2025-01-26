@@ -1,36 +1,33 @@
-import { LoadUSerAccountRepository } from "@/data/contracts/repos";
+import { PgUser } from "@/infra/postgres/entities";
+import { PgUserAccountRepository } from "@/infra/postgres/repos";
 
-import { IBackup, newDb } from 'pg-mem';
-import { Column, DataSource, Entity, PrimaryGeneratedColumn, Repository } from "typeorm";
+import { IBackup, IMemoryDb, newDb } from 'pg-mem';
+import { DataSource, Repository } from "typeorm";
 
-class PgUserAccountRepository implements LoadUSerAccountRepository {
-  constructor(private readonly connection: DataSource) {}
+const makeFakeDb = async (entities?: any[]): Promise<{db: IMemoryDb, connection: DataSource}> => {
+  let connection: DataSource;
 
-  async load(params: LoadUSerAccountRepository.Params): Promise<LoadUSerAccountRepository.Result> {
-    const pgUserRepo = this.connection.getRepository(PgUser);
-    const pgUser = await pgUserRepo.findOneBy({ email: params.email });
-    if (!!pgUser) {
-      return {
-        id: pgUser?.id?.toString(),
-        name: pgUser.name ?? undefined,
-      }
-    }
-  }
-}
+  const db = newDb();
 
-@Entity({  name: 'usuarios' })
-class PgUser {
-  @PrimaryGeneratedColumn()
-  id!: number
+  db.public.registerFunction({
+    name: 'current_database',
+    implementation: () => 'test_db',
+  });
 
-  @Column({ nullable: true, name: 'nome' })
-  name?: string
+  db.public.registerFunction({
+    name: 'version',
+    implementation: () => 'PostgreSQL 14.0 (pg-mem)',
+  });
 
-  @Column()
-  email!: string
+  connection = await db.adapters.createTypeormDataSource({
+    type: 'postgres',
+    entities: entities ?? ['src/infra/postgres/entities/index.ts'],
+    synchronize: true,
+  });
 
-  @Column({ nullable: true, name: 'id_facebook' })
-  facebookId!: string
+  await connection.initialize();
+
+  return { db, connection };
 }
 
 describe('PgUserAccountRepository', () => {
@@ -41,25 +38,8 @@ describe('PgUserAccountRepository', () => {
     let backup: IBackup
 
     beforeAll(async () => {
-      const db = newDb();
-
-      db.public.registerFunction({
-        name: 'current_database',
-        implementation: () => 'test_db',
-      });
-
-      db.public.registerFunction({
-        name: 'version',
-        implementation: () => 'PostgreSQL 14.0 (pg-mem)',
-      });
-
-      connection = await db.adapters.createTypeormDataSource({
-        type: 'postgres',
-        entities: [PgUser],
-        synchronize: true,
-      });
-
-      await connection.initialize();
+      const {db, connection: fakeConnection } = await makeFakeDb([PgUser]);
+      connection = fakeConnection;
 
       backup = db.backup()
 
