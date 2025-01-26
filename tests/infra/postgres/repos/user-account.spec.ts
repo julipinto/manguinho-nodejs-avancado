@@ -7,30 +7,30 @@ import { DataSource, Repository } from "typeorm";
 
 
 describe('PgUserAccountRepository', () => {
+  let sut: PgUserAccountRepository;
+  let connection: DataSource;
+  let pgUserRepo: Repository<PgUser>;
+  let backup: IBackup
+
+  beforeAll(async () => {
+    const {db, connection: fakeConnection } = await makeFakeDb([PgUser]);
+    connection = fakeConnection;
+
+    backup = db.backup()
+
+    pgUserRepo = connection.getRepository(PgUser);
+  });
+
+  beforeEach(() => {
+    backup.restore();
+    sut = new PgUserAccountRepository(connection);
+  });
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
   describe('load', () => {
-    let sut: PgUserAccountRepository;
-    let connection: DataSource;
-    let pgUserRepo: Repository<PgUser>;
-    let backup: IBackup
-
-    beforeAll(async () => {
-      const {db, connection: fakeConnection } = await makeFakeDb([PgUser]);
-      connection = fakeConnection;
-
-      backup = db.backup()
-
-      pgUserRepo = connection.getRepository(PgUser);
-    });
-
-    beforeEach(() => {
-      backup.restore();
-      sut = new PgUserAccountRepository(connection);
-    });
-
-    afterAll(async () => {
-      await connection.destroy();
-    });
-
     it('should return an account if email exists', async () => {
       await pgUserRepo.save({ email: 'existing_email' });
 
