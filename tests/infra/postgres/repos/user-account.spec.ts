@@ -4,6 +4,7 @@ import { PgUserAccountRepository } from "@/infra/postgres/repos";
 import { makeFakeDb } from "@/tests/infra/postgres/mocks";
 import { IBackup } from 'pg-mem';
 import { DataSource, Repository } from "typeorm";
+import { makeFakeDb } from "@/tests/infra/postgres/mocks";
 
 
 describe('PgUserAccountRepository', () => {
