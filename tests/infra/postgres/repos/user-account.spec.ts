@@ -1,7 +1,7 @@
 import { LoadUSerAccountRepository } from "@/data/contracts/repos";
 
-import { newDb } from 'pg-mem';
-import { Column, DataSource, Entity, getRepository, PrimaryGeneratedColumn } from "typeorm";
+import { IBackup, newDb } from 'pg-mem';
+import { Column, DataSource, Entity, PrimaryGeneratedColumn, Repository } from "typeorm";
 
 class PgUserAccountRepository implements LoadUSerAccountRepository {
   constructor(private readonly connection: DataSource) {}
@@ -35,7 +35,12 @@ class PgUser {
 
 describe('PgUserAccountRepository', () => {
   describe('load', () => {
-    it('should return an account if email exists', async () => {
+    let sut: PgUserAccountRepository;
+    let connection: DataSource;
+    let pgUserRepo: Repository<PgUser>;
+    let backup: IBackup
+
+    beforeAll(async () => {
       const db = newDb();
 
       db.public.registerFunction({
@@ -48,8 +53,7 @@ describe('PgUserAccountRepository', () => {
         implementation: () => 'PostgreSQL 14.0 (pg-mem)',
       });
 
-
-      const connection = await db.adapters.createTypeormDataSource({
+      connection = await db.adapters.createTypeormDataSource({
         type: 'postgres',
         entities: [PgUser],
         synchronize: true,
@@ -57,47 +61,35 @@ describe('PgUserAccountRepository', () => {
 
       await connection.initialize();
 
-      const pgUserRepo = connection.getRepository(PgUser);
+      backup = db.backup()
+
+      pgUserRepo = connection.getRepository(PgUser);
+    });
+
+    beforeEach(() => {
+      backup.restore();
+      sut = new PgUserAccountRepository(connection);
+    });
+
+    afterAll(async () => {
+      await connection.destroy();
+    });
+
+    it('should return an account if email exists', async () => {
       await pgUserRepo.save({ email: 'existing_email' });
 
-      const sut = new PgUserAccountRepository(connection);
       const account = await sut.load({ email: 'existing_email' });
 
       expect(account).toEqual({
         id: '1',
       });
 
-      await connection.destroy();
     });
 
     it('should return undefined if email does not exists', async () => {
-      const db = newDb();
-
-      db.public.registerFunction({
-        name: 'current_database',
-        implementation: () => 'test_db',
-      });
-
-      db.public.registerFunction({
-        name: 'version',
-        implementation: () => 'PostgreSQL 14.0 (pg-mem)',
-      });
-
-      const connection = await db.adapters.createTypeormDataSource({
-        type: 'postgres',
-        entities: [PgUser],
-        synchronize: true,
-      });
-
-      await connection.initialize();
-
-      const sut = new PgUserAccountRepository(connection);
-
       const account = await sut.load({ email: 'new_email' });
 
       expect(account).toBeUndefined();
-
-      await connection.close();
     });
   });
 });
