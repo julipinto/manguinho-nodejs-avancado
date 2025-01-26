@@ -9,7 +9,7 @@ type LoadResult = LoadUSerAccountRepository.Result
 type SaveParams = SaveUserAccountByFacebookRepository.Params
 type SaveResult = SaveUserAccountByFacebookRepository.Result
 
-export class PgUserAccountRepository implements LoadUSerAccountRepository {
+export class PgUserAccountRepository implements LoadUSerAccountRepository, SaveUserAccountByFacebookRepository {
   private pgUserRepo: Repository<PgUser>;
   constructor(private readonly connection: DataSource) {
     this.pgUserRepo = this.connection.getRepository(PgUser)
