@@ -1,12 +1,12 @@
 
-type FacebookData = {
+interface FacebookData {
   id?: string
   name: string
   email: string
   facebookId: string
 }
 
-type AccountData = {
+interface AccountData {
   id?: string
   name?: string
 }

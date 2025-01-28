@@ -1,5 +1,5 @@
-import { IMemoryDb, newDb } from "pg-mem";
-import { DataSource } from "typeorm";
+import { type IMemoryDb, newDb } from "pg-mem";
+import type { DataSource } from "typeorm";
 
 export const makeFakeDb = async (entities?: any[]): Promise<{db: IMemoryDb, connection: DataSource}> => {
   let connection: DataSource;

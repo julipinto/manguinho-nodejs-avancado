@@ -1,1 +1,1 @@
-export * from "./facebook-authentication";
+export type * from "./facebook-authentication";

@@ -1,12 +1,12 @@
-import { FacebookAuthentication } from "@/domain/features";
-import { LoadFacebookUserApi } from "@/data/contracts/apis";
+import type { FacebookAuthentication } from "@/domain/features";
+import type { LoadFacebookUserApi } from "@/data/contracts/apis";
 import { AuthenticationError } from "@/domain/errors";
-import {
+import type {
   SaveUserAccountByFacebookRepository,
   LoadUSerAccountRepository,
 } from "@/data/contracts/repos";
 import { AccessToken, FacebookAccount } from "@/domain/models";
-import { TokenGenerator } from "@/data/contracts/crypto";
+import type { TokenGenerator } from "@/data/contracts/crypto";
 
 export class FacebookAuthenticationService implements FacebookAuthentication {
   constructor(
@@ -21,7 +21,7 @@ export class FacebookAuthenticationService implements FacebookAuthentication {
     const fbData = await this.facebookApi.loadUser(params);
     if (fbData !== undefined) {
       const accountData = await this.userAccountRepo.load({
-        email: fbData?.email,
+        email: fbData.email,
       });
       const fbAccount = new FacebookAccount(fbData, accountData);
       const { id } = await this.userAccountRepo.saveWithFacebook(fbAccount);

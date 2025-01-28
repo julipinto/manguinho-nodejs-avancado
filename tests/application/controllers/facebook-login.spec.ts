@@ -1,9 +1,9 @@
 import { FacebookLoginController } from "@/application/controllers";
 import { ServerError } from "@/application/errors/http";
 import { AuthenticationError } from "@/domain/errors";
-import { FacebookAuthentication } from "@/domain/features";
+import type { FacebookAuthentication } from "@/domain/features";
 import { AccessToken } from "@/domain/models";
-import { mock, MockProxy } from "jest-mock-extended";
+import { mock, type MockProxy } from "jest-mock-extended";
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController;

@@ -1,6 +1,6 @@
-import { FacebookAuthentication } from "@/domain/features";
+import type { FacebookAuthentication } from "@/domain/features";
 import { AccessToken } from "@/domain/models";
-import { HttpResponse } from "@/application/helpers";
+import type { HttpResponse } from "@/application/helpers";
 import { ServerError } from "@/application/errors/http";
 
 export class FacebookLoginController {

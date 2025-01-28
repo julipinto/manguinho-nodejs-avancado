@@ -1,8 +1,8 @@
 export namespace TokenGenerator {
-  export type Params = {
+  export interface Params {
     key: string;
     expirationInMs: number;
-  };
+  }
 
   export type Result = string;
 }

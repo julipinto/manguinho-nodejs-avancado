@@ -1,1 +1,1 @@
-export * from "./facebook";
+export type * from "./facebook";

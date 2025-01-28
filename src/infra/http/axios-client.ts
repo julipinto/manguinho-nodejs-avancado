@@ -1,4 +1,4 @@
-import { HttpGetClient } from "@/infra/http";
+import type { HttpGetClient } from "@/infra/http";
 
 import axios from "axios";
 

@@ -1,4 +1,4 @@
-import { TokenGenerator } from "@/data/contracts/crypto"
+import type { TokenGenerator } from "@/data/contracts/crypto"
 import { sign } from "jsonwebtoken"
 
 export class JsonTokenGenerator implements TokenGenerator {

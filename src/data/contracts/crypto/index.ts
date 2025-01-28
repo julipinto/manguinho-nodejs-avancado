@@ -1,1 +1,1 @@
-export * from "./token";
+export type * from "./token";
