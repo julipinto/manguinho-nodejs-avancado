@@ -1,5 +1,5 @@
 import { FacebookLoginController } from "@/application/controllers";
-import { ServerError } from "@/application/errors/http";
+import { ServerError, UnauthorizedError } from "@/application/errors/http";
 import { AuthenticationError } from "@/domain/errors";
 import type { FacebookAuthentication } from "@/domain/features";
 import { AccessToken } from "@/domain/models";
@@ -60,7 +60,7 @@ describe('FacebookLoginController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 401,
-      data: new AuthenticationError()
+      data: new UnauthorizedError()
     });
   });
 
