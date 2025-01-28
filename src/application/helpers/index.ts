@@ -1,1 +1,1 @@
-export type * from './http'
+export * from './http'
