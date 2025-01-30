@@ -1,10 +1,10 @@
-import { RequiredFieldError } from "@/application/errors/http";
 import type { HttpResponse } from "@/application/helpers";
 import { badRequest, ok, serverError, unauthorized } from "@/application/helpers";
 import type { FacebookAuthentication } from "@/domain/features";
 import { AccessToken } from "@/domain/models";
+import { RequiredStringValidator } from "@/application/validation";
 
-type HttpRequest = {
+interface HttpRequest {
   token: string
 }
 
@@ -20,7 +20,7 @@ export class FacebookLoginController {
         return badRequest(error);
       }
 
-      const accessToken = await this.facebookAuthentication.perform({ token: httpRequest.token! });
+      const accessToken = await this.facebookAuthentication.perform({ token: httpRequest.token });
       if (accessToken instanceof AccessToken) {
         return ok({ accessToken: accessToken.value });
       }
@@ -33,8 +33,7 @@ export class FacebookLoginController {
   }
 
   private validate(httpRequest: HttpRequest): Error | undefined {
-    if (httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
-      return new RequiredFieldError('token');
-    }
+    const validator = new RequiredStringValidator(httpRequest.token, "token");
+    return validator.validate();
   }
 }
