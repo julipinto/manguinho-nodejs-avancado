@@ -1,6 +1,5 @@
 import { FacebookApi } from "@/infra/apis";
 import type { HttpGetClient } from "@/infra/http";
-import { access } from "fs";
 import { mock, type MockProxy } from "jest-mock-extended";
 
 describe("FacebookApi", () => {
